@@ -1,7 +1,6 @@
 alembic==0.9.8
 Babel==2.5.3
 beautifulsoup4==4.6.0
--e git+https://github.com/martinbarnard/city.git@2965c43ecfd1bd46317d7ba05f645234ef3469b3#egg=city
 click==6.7
 colorama==0.3.9
 defusedxml==0.5.0

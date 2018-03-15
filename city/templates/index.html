@@ -9,11 +9,13 @@
     </form>
     <ul>
         {% for d in last_n %}
-            <li>
-                <a href="{{ url_for('get_by_id', url_id = d.id ) }}">{{ d.url }}</a> 
-                <a href="{{ url_for('get_faves', url_id = d.id ) }}">Faves</a>
+            {% if d.url != '' %}
+                <li>
+                    <a href="{{ url_for('get_by_id', url_id = d.id ) }}">{{ d.url }}</a> 
+                    <a href="{{ url_for('get_faves', url_id = d.id ) }}">Faves</a>
 
-            </li>
+                </li>
+            {% endif %}
         {% endfor %}
     </li>
 {% endblock %}

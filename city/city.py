@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
-from flask import (Flask, render_template, request, flash, g, redirect, url_for)
-from flask import jsonify
+from flask import (Flask, render_template, request, redirect, url_for)
 import os
 from .scraper import souper
 
@@ -12,8 +11,7 @@ def get_env_var(name):
         return os.environ[name]
     except KeyError:
         message = "Expected variable {} unset".format(name)
-        return ''
-        #raise Exception(message)
+        return message
 
 app.config.from_object(__name__)
 app.config.update(
@@ -26,6 +24,7 @@ app.config.update(
 
 # These will bork if we don't have them
 app.config['SECRET_KEY'] = 'thisisacrappykey'
+SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
 
 # A list of words to use for storing n stuff
 our_words = ['the', 'this','many', 'python', 'mysql'] 
@@ -76,18 +75,18 @@ class Words(db.Model):
 def make_shell_context():
     return {'db':db, 'Scraper':Scraper, 'Words':Words}
 
-@app.cli.command('createdb')
-def createdb_command():
-    '''
-    Create our db & tables
-    '''
-    from sqlalchemy_utils import database_exists, create_database
-    if not database_exists(SQLALCHEMY_DATABASE_URI):
-        print('creating db')
-        create_database(SQLALCHEMY_DATABASE_URI)
-    print('creating tables')
-    db.create_all()
-    print('done')
+#@app.cli.command('createdb')
+#def createdb_command():
+#    '''
+#    Create our db & tables
+#    '''
+#    from sqlalchemy_utils import database_exists, create_database
+#    if not database_exists(SQLALCHEMY_DATABASE_URI):
+#        print('creating db')
+#        create_database(SQLALCHEMY_DATABASE_URI)
+#    print('creating tables')
+#    db.create_all()
+#    print('done')
 
 @app.route('/')
 def index():
@@ -103,21 +102,29 @@ def index():
 @app.route('/add', methods=['POST'])
 def add_url():
     myurl = request.form['url']
-    # TODO: Test to see if we have the url already - if we do, we just return that id
+    if len(myurl) == 0:
+        return redirect('/')
+
+    have_url = Scraper.query.filter(Scraper.url == myurl).all()
+    if len(have_url) > 0:
+        print('we have some of those')
+        return redirect('/')
+
     url_id = Scraper(url=myurl)
     db.session.add(url_id)
     db.session.commit()
+
+    # This is our nltk stuff
     soup = souper(myurl)
-    # Now we have stuff. let's do thing with it
     soup.get_url()
     soup.extract_stuff()
     soup.logic_up()
-    common = soup.lemms_fdist.most_common(10)
     for sample in soup.lemms_fdist:
         v = soup.lemms_fdist[sample]
         w = Words(url = url_id.id, word = sample, wordcount = v)
         db.session.add(w)
     db.session.commit()
+
     return redirect(url_for('.get_by_id',url_id='{}'.format(url_id.id)))
     
 @app.route('/url_id/<int:url_id>', methods=['GET'])
@@ -128,7 +135,7 @@ def get_by_id(url_id):
     import json
     w = Words.query.filter(Words.url == url_id).all()
     data = json.dumps([i.serialize for i in w])
-    return render_template('results.html', words = w, data = data)
+    return render_template('results.html', words = w, data = data, url_id = url_id)
 
 @app.route('/url_wc/<int:url_id>', methods=['GET'])
 def get_faves(url_id):
@@ -136,7 +143,7 @@ def get_faves(url_id):
     w = Words.query.filter(Words.url == url_id).all() #.having(Words.word in our_words).all()
     data = json.dumps([i.serialize for i in w if i.word in our_words])
     print(data)
-    return render_template('results.html', words = w, data = data)
+    return render_template('results.html', words = w, data = data, url_id = None)
     
 
 if __name__ == '__main__':
