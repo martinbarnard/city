@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
 from flask import (Flask, render_template, request, flash, g, redirect, url_for)
+from flask import jsonify
 import os
 from .scraper import souper
 
@@ -27,7 +28,7 @@ app.config.update(
 app.config['SECRET_KEY'] = 'thisisacrappykey'
 
 # A list of words to use for storing n stuff
-our_words = [] 
+our_words = ['the', 'this','many', 'python', 'mysql'] 
 db = SQLAlchemy(app)
 
 # Crappy migrations
@@ -45,12 +46,29 @@ class Scraper(db.Model):
     def __repr__(self):
         return '<Scraper {}>'.format(self.url)
 
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+           'id' : self.id,
+           'url': self.url, 
+       }
+
+
 class Words(db.Model):
     __tablename__ = 'words'
     id = db.Column(db.Integer, primary_key = True)
     url = db.Column(db.Integer, db.ForeignKey('urls.id'), nullable=False)
-    word = db.Column(db.String(25), unique = False, nullable = False)
+    word = db.Column(db.String(50), unique = False, nullable = False)
     wordcount = db.Column(db.Integer)
+    @property
+    def serialize(self):
+       """Return object data in easily serializeable format"""
+       return {
+           'id' : self.id,
+           'url': self.url, 
+           'word' : self.word,
+           'wordcount' : self.wordcount,
+       }
 ################################################################################
 
 
@@ -77,7 +95,10 @@ def index():
     Will take a url and parse the fucker
     TODO: get url from get args
     '''
-    return render_template('index.html')
+    import json
+    last_n = Scraper.query.filter().order_by(Scraper.id).limit(20)
+    data = json.dumps([i.serialize() for i in last_n])
+    return render_template('index.html', data = data, last_n = last_n)
 
 @app.route('/add', methods=['POST'])
 def add_url():
@@ -97,7 +118,6 @@ def add_url():
         w = Words(url = url_id.id, word = sample, wordcount = v)
         db.session.add(w)
     db.session.commit()
-
     return redirect(url_for('.get_by_id',url_id='{}'.format(url_id.id)))
     
 @app.route('/url_id/<int:url_id>', methods=['GET'])
@@ -105,9 +125,19 @@ def get_by_id(url_id):
     '''
     Will return the words
     '''
-    #w = db.session.query(Words).filter(Words.url==url_id)
+    import json
     w = Words.query.filter(Words.url == url_id).all()
-    return render_template('results.html', words = w)
+    data = json.dumps([i.serialize for i in w])
+    return render_template('results.html', words = w, data = data)
+
+@app.route('/url_wc/<int:url_id>', methods=['GET'])
+def get_faves(url_id):
+    import json
+    w = Words.query.filter(Words.url == url_id).all() #.having(Words.word in our_words).all()
+    data = json.dumps([i.serialize for i in w if i.word in our_words])
+    print(data)
+    return render_template('results.html', words = w, data = data)
+    
 
 if __name__ == '__main__':
     print('starting up...')

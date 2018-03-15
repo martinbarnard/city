@@ -1,6 +1,21 @@
 {% extends "layout.html" %}
 {% block body %}
-    {% for w in words %}
-        <li>{{ w.word }} - {{ w.wordcount }} </li>
-    {% endfor %}
+    <h3>Results</h3>
+    <a href="/">Back</a>
+    <div id="results_plot"></div>
+    <script>
+        var rv = JSON.parse({{ data|tojson }});
+        var data = [{
+            x: rv.map((d) => d.word ),
+            y: rv.map((d) => d.wordcount ),
+        }];
+        data[0].type = 'bar';
+        data[0].mode = 'markers';
+
+        var layout = {
+            title: 'Word Frequency',
+        };
+        Plotly.newPlot('results_plot', data, layout);
+            
+    </script>
 {% endblock %}
