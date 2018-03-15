@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{ url_for('add_url') }}" method=post class=add-entry>
+    <form action="{{ url_for('add_url') }}" method=post class=add>
       <dl>
         <dt>URL:
-        <dd><input type=text size=30 name=title>
+        <dd><input type=text size=30 name=url>
         <dd><input type=submit value=Scrape>
       </dl>
     </form>
