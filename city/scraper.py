@@ -73,16 +73,3 @@ class souper():
         return True
 
 
-if __name__=='__main__':
-    # Really, just an example
-    print('''calling souper with 'http://www.wikipedia.org'...''')
-    soup = souper('https://www.wikipedia.org')
-    print('soup.get_url() example')
-    soup.get_url()
-    print('soup.extract_stuff() example')
-    soup.extract_stuff()
-    print('soup.logic_up() example')
-    soup.logic_up()
-    print('Most Common 10 words:')
-    print(soup.lemms_fdist.most_common(10))
-

@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% for w in words %}
+        <li>{{ w.word }} - {{ w.wordcount }} </li>
+    {% endfor %}
+{% endblock %}
