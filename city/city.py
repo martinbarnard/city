@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
 from flask import (Flask, render_template, request, redirect, url_for)
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
+
 import os
 from .scraper import souper
 
@@ -29,6 +32,13 @@ SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
 # A list of words to use for storing n stuff
 our_words = ['the', 'this','many', 'python', 'mysql'] 
 db = SQLAlchemy(app)
+
+
+# Migrations
+migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
 
 # Crappy migrations
 try:
@@ -110,13 +120,16 @@ def add_url():
         print('we have some of those')
         return redirect('/')
 
+    # This is our nltk stuff
+    soup = souper(myurl)
+    res = soup.get_url()
+    if res == False:
+        return  redirect('/')
+
     url_id = Scraper(url=myurl)
     db.session.add(url_id)
     db.session.commit()
 
-    # This is our nltk stuff
-    soup = souper(myurl)
-    soup.get_url()
     soup.extract_stuff()
     soup.logic_up()
     for sample in soup.lemms_fdist:

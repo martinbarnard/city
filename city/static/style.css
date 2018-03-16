@@ -1,0 +1,98 @@
+body            { font-family: sans-serif; background: #eee; }
+a, h1, h2       { color: #377ba8; }
+h1, h2          { font-family: 'Georgia', serif; margin: 0; }
+h1              { border-bottom: 2px solid #eee; }
+h2              { font-size: 1.2em; }
+
+.page           { margin: 2em auto; width: 80%; border: 5px solid #ccc;
+                  padding: 0.8em; background: white; }
+.entries        { list-style: none; margin: 0; padding: 0; }
+.entries li     { margin: 0.8em 1.2em; }
+.entries li h2  { margin-left: -1em; }
+.add-entry      { 
+    font-size: 0.9em; 
+    border-bottom: 1px solid #ccc; 
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+}
+.add-entry dl   { font-weight: bold; }
+.metanav        { text-align: right; font-size: 0.8em; padding: 0.3em;
+                  margin-bottom: 1em; background: #fafafa; }
+.flash          { background: #cee5F5; padding: 0.5em;
+                  border: 1px solid #aacbe2; }
+.error          { background: #f0d6d6; padding: 0.5em; }
+.button         { font-size: 0.9em;}
+.addform        { 
+    background-color: #d6d6d6;
+    margin:1em;
+    padding:2em;
+
+}
+   
+n {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.butg {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #4CAF50;
+}
+
+.butg:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.butb {
+    background-color: #aa8cba; 
+    color: black; 
+    border: 1px solid #008CBA;
+}
+
+.butb:hover {
+    background-color: #008CBA;
+    color: white;
+    box-shadow: 2px 2px 2px grey;
+}
+
+.butr {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #f44336;
+}
+
+.butr:hover {
+    background-color: #f44336;
+    color: white;
+}
+
+.butgr {
+    background-color: white;
+    color: black;
+    border: 2px solid #e7e7e7;
+}
+
+.butgr:hover {background-color: #e7e7e7;}
+
+.butbl {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+}
+
+.butbl:hover {
+    background-color: #555555;
+    color: white;
+}

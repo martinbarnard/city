@@ -1,3 +1,6 @@
 city.egg-info*
 city/__pycache__*
 city/instance/*
+build*
+__pycache__*
+

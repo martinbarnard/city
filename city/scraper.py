@@ -37,10 +37,14 @@ class souper():
         '''
         # try to get our site - note some 403's depending upon sophistication of the site
         # todo: test & return / raise error
-        site = urllib.request.urlopen(self.url)
-        self.html = site.read()
-        site.close()
-        return True
+        try:
+            site = urllib.request.urlopen(self.url)
+            self.html = site.read()
+            site.close()
+            return True
+        except:
+            print('unable to open site')
+            return False
 
     def extract_stuff(self):
         soup = bs(self.html, 'html.parser')

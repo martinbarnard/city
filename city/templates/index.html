@@ -1,21 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
-    <form action="{{ url_for('add_url') }}" method=post class=add>
-      <dl>
-        <dt>URL:
-        <dd><input type=text size=30 name=url>
-        <dd><input type=submit value=Scrape>
-      </dl>
-    </form>
-    <ul>
+    <div class="addform">
+        <form action="{{ url_for('add_url') }}" method=post class="add">
+            <div>Enter url:</div>
+            <div><input type=text size=30 name=url><input type=submit value=Scrape></div>
+        </form>
+    </div>
         {% for d in last_n %}
             {% if d.url != '' %}
-                <li>
-                    <a href="{{ url_for('get_by_id', url_id = d.id ) }}">{{ d.url }}</a> 
-                    <a href="{{ url_for('get_faves', url_id = d.id ) }}">Faves</a>
-
-                </li>
+                <dl class="add-entry">
+                    <dd><a class="button butb" href="{{ url_for('get_by_id', url_id = d.id ) }}" >All</a> - <a class="button butb" href="{{ url_for('get_faves', url_id = d.id ) }}" >Faves</a><span style="margin-left:2em;">{{ d.url }}</span></dd>
+                </dl>
             {% endif %}
         {% endfor %}
-    </li>
 {% endblock %}
