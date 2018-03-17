@@ -30,7 +30,7 @@ app.config['SECRET_KEY'] = 'thisisacrappykey'
 SQLALCHEMY_DATABASE_URI = app.config['SQLALCHEMY_DATABASE_URI']
 
 # A list of words to use for storing n stuff
-our_words = ['the', 'this','many', 'python', 'mysql'] 
+our_words = ['city', 'linux','good', 'python', 'mysql'] 
 db = SQLAlchemy(app)
 
 
@@ -102,12 +102,12 @@ def make_shell_context():
 def index():
     '''
     Will take a url and parse the fucker
-    TODO: get url from get args
+    TODO: Get the word count on the page.
     '''
     import json
     last_n = Scraper.query.filter().order_by(Scraper.id).limit(20)
     data = json.dumps([i.serialize() for i in last_n])
-    return render_template('index.html', data = data, last_n = last_n)
+    return render_template('index.html', data = data, last_n = last_n, our_words = our_words)
 
 @app.route('/add', methods=['POST'])
 def add_url():
@@ -132,7 +132,7 @@ def add_url():
 
     soup.extract_stuff()
     soup.logic_up()
-    for sample in soup.lemms_fdist:
+    for sample in soup.stripped_fdist:
         v = soup.lemms_fdist[sample]
         w = Words(url = url_id.id, word = sample, wordcount = v)
         db.session.add(w)
@@ -148,7 +148,7 @@ def get_by_id(url_id):
     import json
     w = Words.query.filter(Words.url == url_id).all()
     data = json.dumps([i.serialize for i in w])
-    return render_template('results.html', words = w, data = data, url_id = url_id)
+    return render_template('results.html', words = w, data = data, url_id = url_id, our_words = our_words)
 
 @app.route('/url_wc/<int:url_id>', methods=['GET'])
 def get_faves(url_id):
@@ -156,7 +156,7 @@ def get_faves(url_id):
     w = Words.query.filter(Words.url == url_id).all() #.having(Words.word in our_words).all()
     data = json.dumps([i.serialize for i in w if i.word in our_words])
     print(data)
-    return render_template('results.html', words = w, data = data, url_id = None)
+    return render_template('results.html', words = w, data = data, url_id = None, our_words = our_words)
     
 
 if __name__ == '__main__':

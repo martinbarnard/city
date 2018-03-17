@@ -28,6 +28,15 @@ h2              { font-size: 1.2em; }
     padding:2em;
 
 }
+.ourwords {
+    margin:2em auto;
+}
+
+.ours {
+    font-size: 1.4em;
+    color: darkgrey;
+}
+
    
 n {
     background-color: #4CAF50; /* Green */

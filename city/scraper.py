@@ -29,7 +29,9 @@ class souper():
         return: txt
         '''
         from re import compile, UNICODE
-        return ' '.join(compile(r'\W+', UNICODE).split(txt))
+        
+        rv = ' '.join(compile(r'\W+', UNICODE).split(txt))
+        return rv
 
     def get_url(self):
         '''
@@ -44,6 +46,7 @@ class souper():
             return True
         except:
             print('unable to open site')
+            print(self.url)
             return False
 
     def extract_stuff(self):
@@ -61,6 +64,7 @@ class souper():
         '''
         Do our simple logic and stuff
         '''
+        from nltk.corpus import stopwords
         wnl = nltk.WordNetLemmatizer()
         txt = self.cleaned_text
 
@@ -70,6 +74,9 @@ class souper():
         # After tokenization
         # lemmatize
         self.lemms = [wnl.lemmatize(t) for t in self.tokens]
+        # Remove our stopwords
+        self.stripped = [w for w in self.lemms if w not in stopwords.words('english')]
+        self.stripped_fdist = nltk.FreqDist(w for w in self.stripped if len(w)>3)
 
         # frequency distribution
         #self.token_fdist = nltk.FreqDist(w for w in self.tokens)

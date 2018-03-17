@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
     <h3>Results</h3>
+    <div class="ourwords">
+    {% for w in our_words %}
+        <span class="ours">{{ w }}</span>
+    {% endfor %}
+    </div>
     <a href="/" class="button butb">Back</a>
     {% if url_id %}
         <a class="button butb" href="{{ url_for('get_faves', url_id = url_id ) }}">Faves (selected words)</a>

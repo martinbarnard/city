@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
+    <div class="ourwords">
+    {% for w in our_words %}
+        <span class="ours">{{ w }}</span>
+    {% endfor %}
+    </div>
     <div class="addform">
         <form action="{{ url_for('add_url') }}" method=post class="add">
             <div>Enter url:</div>
