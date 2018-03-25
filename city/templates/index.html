@@ -14,8 +14,11 @@
         {% for d in last_n %}
             {% if d.url != '' %}
                 <dl class="add-entry">
-                    <dd><a class="button butb" href="{{ url_for('get_by_id', url_id = d.id ) }}" >All</a> - <a class="button butb" href="{{ url_for('get_faves', url_id = d.id ) }}" >Faves</a><span style="margin-left:2em;">{{ d.url }}</span></dd>
+                    <dd><a class="button butb" href="{{ url_for('get_by_id', url_id = d.id ) }}" >All</a> - <a class="button butb" href="{{ url_for('get_faves', url_id = d.id ) }}" >Faves</a><span style="margin-left:2em;"><a href="{{ d.url }}" target="_blank">{{ d.url }}</a></span></dd>
                 </dl>
             {% endif %}
         {% endfor %}
+{% endblock %}
+{% block footer %}
+    <a href="https://github.com/martinbarnard/city">repo</a>
 {% endblock %}

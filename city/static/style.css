@@ -53,6 +53,11 @@ n {
     cursor: pointer;
 }
 
+a .git {
+    font-size:0.8em;
+    color: red;
+    box-shadow: 2px 2px 2px grey;
+}
 .butg {
     background-color: white; 
     color: black; 
